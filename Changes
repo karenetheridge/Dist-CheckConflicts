@@ -1,6 +1,8 @@
 Revision history for Dist-CheckConflicts
 
 {{$NEXT}}
+      - instead of silently ignoring conflicts that do not compile, issue a
+        conflict warning. (RT#75486, Karen Etheridge)
 
 0.05-TRIAL  2011-01-17
       - require 5.8.1, clean up a few things and add a few more tests
