@@ -6,8 +6,6 @@ use Test::Fatal;
 use Test::Warn;
 use lib 't/lib/02';
 
-goto START_HERE;
-
 sub use_ok_warnings {
     my ($class, @conflicts) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
@@ -96,7 +94,6 @@ sub use_ok_warnings {
     );
 }
 
-START_HERE:
 {
     # conflicting module is utterly broken
 
