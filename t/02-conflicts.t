@@ -3,7 +3,10 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Fatal;
+use Test::Warn;
 use lib 't/lib/02';
+
+goto START_HERE;
 
 sub use_ok_warnings {
     my ($class, @conflicts) = @_;
@@ -89,6 +92,33 @@ sub use_ok_warnings {
     is(
         exception { Bar::Conflicts::Bad->check_conflicts },
         "Conflicts detected for Bar::Conflicts::Bad:\n  Bar is version 0.02, but must be greater than version 0.03\n  Bar::Two is version 0.02, but must be greater than version 0.02\n",
+        "correct conflict error"
+    );
+}
+
+START_HERE:
+{
+    # conflicting module is utterly broken
+
+    eval "use lib 't/lib/02b'";
+    require Bar::Conflicts::Broken;
+
+    my @conflicts;
+    warning_like { @conflicts = Bar::Conflicts::Broken->calculate_conflicts }
+        qr/Warning: Broken did not compile/,
+        'Warning is issued when Broken fails to compile';
+
+    is_deeply(
+        \@conflicts,
+        [
+            { package => 'Broken', installed => 'unknown', required => '0.03' },
+        ],
+        "correct versions for all conflicts",
+    );
+
+    is(
+        exception { Bar::Conflicts::Broken->check_conflicts },
+        "Conflicts detected for Bar::Conflicts::Broken:\n  Broken is version unknown, but must be greater than version 0.03\n",
         "correct conflict error"
     );
 }

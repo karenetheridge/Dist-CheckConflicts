@@ -5,6 +5,7 @@ use warnings;
 
 use Carp;
 use List::MoreUtils 'first_index';
+use Class::Load 'try_load_class';
 use Sub::Exporter;
 
 =head1 SYNOPSIS
@@ -266,16 +267,22 @@ sub calculate_conflicts {
 
     CONFLICT:
     for my $conflict (keys %conflicts) {
-        {
-            local $SIG{__WARN__} = sub { };
-            eval "require $conflict; 1" or next CONFLICT;
-        }
-        my $installed = $conflict->VERSION;
+        my ($success, $error);
+print "### trying to load $conflict\n";
+#        my ($success, $error) =
+        try_load_class($conflict);
+#        next if not $success and $error =~ /^Can't locate/;
+        return;
+        next;
+
+
+        warn "Warning: $conflict did not compile" if not $success;
+        my $installed = $success ? $conflict->VERSION : 'unknown';
         push @ret, {
             package   => $conflict,
             installed => $installed,
             required  => $conflicts{$conflict},
-        } if $installed le $conflicts{$conflict};
+        } if not $success or $installed le $conflicts{$conflict};
     }
 
     return sort { $a->{package} cmp $b->{package} } @ret;
