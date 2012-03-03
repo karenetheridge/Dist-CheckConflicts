@@ -1,4 +1,4 @@
-package Bar::Conflicts::Broken;
+package Foo::Conflicts::Broken;
 use strict;
 use warnings;
 

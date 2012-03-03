@@ -97,10 +97,10 @@ sub use_ok_warnings {
 {
     # conflicting module is utterly broken
 
-    use_ok('Bar::Conflicts::Broken');
+    use_ok('Foo::Conflicts::Broken');
 
     my @conflicts;
-    warning_like { @conflicts = Bar::Conflicts::Broken->calculate_conflicts }
+    warning_like { @conflicts = Foo::Conflicts::Broken->calculate_conflicts }
         qr/Warning: Broken did not compile/,
         'Warning is issued when Broken fails to compile';
 
@@ -113,8 +113,8 @@ sub use_ok_warnings {
     );
 
     is(
-        exception { Bar::Conflicts::Broken->check_conflicts },
-        "Conflicts detected for Bar::Conflicts::Broken:\n  Broken is version unknown, but must be greater than version 0.03\n",
+        exception { Foo::Conflicts::Broken->check_conflicts },
+        "Conflicts detected for Foo::Conflicts::Broken:\n  Broken is version unknown, but must be greater than version 0.03\n",
         "correct conflict error"
     );
 }
