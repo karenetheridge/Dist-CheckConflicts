@@ -97,8 +97,7 @@ sub use_ok_warnings {
 {
     # conflicting module is utterly broken
 
-    eval "use lib 't/lib/02b'";
-    require Bar::Conflicts::Broken;
+    use_ok('Bar::Conflicts::Broken');
 
     my @conflicts;
     warning_like { @conflicts = Bar::Conflicts::Broken->calculate_conflicts }
