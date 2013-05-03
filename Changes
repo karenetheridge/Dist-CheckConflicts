@@ -1,6 +1,8 @@
 Revision history for Dist-CheckConflicts
 
 {{$NEXT}}
+
+0.06  2013-05-03
       - instead of silently ignoring conflicts that do not compile, issue a
         conflict warning. (RT#75486, Karen Etheridge)
 
