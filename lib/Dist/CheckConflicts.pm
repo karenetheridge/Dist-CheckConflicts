@@ -5,8 +5,7 @@ use warnings;
 
 use Carp;
 use List::MoreUtils 'first_index';
-use Class::Load 'try_load_class';
-use Module::Runtime 'module_notional_filename';
+use Module::Runtime 'module_notional_filename', 'require_module';
 use Sub::Exporter;
 
 =head1 SYNOPSIS
@@ -266,7 +265,8 @@ sub calculate_conflicts {
 
     CONFLICT:
     for my $conflict (keys %conflicts) {
-        my ($success, $error) = try_load_class($conflict);
+        my $success = eval { require_module($conflict) };
+        my $error = $@;
         my $file = module_notional_filename($conflict);
         next if not $success and $error =~ /Can't locate \Q$file\E in \@INC/;
 
