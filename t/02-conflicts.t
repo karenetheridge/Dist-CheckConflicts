@@ -4,8 +4,7 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Test::Warn;
-use Test::Warnings;
+use Test::Warnings 'warning';
 use lib 't/lib/02';
 
 sub use_ok_warnings {
@@ -102,7 +101,7 @@ sub use_ok_warnings {
     use_ok('Foo::Conflicts::Broken');
 
     my @conflicts;
-    warning_like { @conflicts = Foo::Conflicts::Broken->calculate_conflicts }
+    like warning { @conflicts = Foo::Conflicts::Broken->calculate_conflicts },
         qr/Warning: Broken did not compile/,
         'Warning is issued when Broken fails to compile';
 
@@ -114,13 +113,13 @@ sub use_ok_warnings {
         "correct versions for all conflicts",
     );
 
-    warning_like {
+    like warning {
         like(
             exception { Foo::Conflicts::Broken->check_conflicts },
             qr/^Conflicts detected for Foo::Conflicts::Broken:\n  Broken is version unknown, but must be greater than version 0.03\n/,
             "correct conflict error",
         );
-        }
+        },
         qr/Warning: Broken did not compile/,
         'Warning is also issued when Broken fails to compile',
     ;
